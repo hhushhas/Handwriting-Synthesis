@@ -49,9 +49,21 @@ parser.add_argument(
 args = parser.parse_args()
 
 # Define global constants
-torch.backends.cudnn.benchmark = True
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-device2 = torch.device("cuda:1")
+# Device selection with fallback for single-GPU/Colab
+def select_devices():
+    """Select primary and secondary devices. Falls back to single device."""
+    if torch.cuda.is_available():
+        count = torch.cuda.device_count()
+        dev0 = torch.device("cuda:0")
+        dev1 = torch.device("cuda:1") if count > 1 else dev0
+        return dev0, dev1
+    # Apple Silicon fallback
+    if hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+        dev = torch.device("mps")
+        return dev, dev
+    return torch.device("cpu"), torch.device("cpu")
+
+device, device2 = select_devices()
 dis_stats = {"std": 0, "vars": []}
 current_log = args.log
 writer = SummaryWriter(f"{config.RUNS_DIR}/{current_log}")
@@ -111,7 +123,7 @@ def train(epochs=1, from_checkpoint=False, checkpoint_interval=1):
     ctc_criterion = nn.CTCLoss(zero_infinity=True)
 
     if from_checkpoint:
-        point = torch.load(f"{config.OUT_DIR}/checkpoint.pt")
+        point = torch.load(f"{config.OUT_DIR}/checkpoint.pt", map_location=device)
         lm.load_state_dict(point["lm"])
         gen.load_state_dict(point["gen"])
         dis.load_state_dict(point["dis"])

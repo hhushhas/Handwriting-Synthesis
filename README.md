@@ -68,6 +68,55 @@ pip install -r requirements.txt
 
 This will install the dependencies and then you can use the code.
 
+### Colab quickstart (recommended)
+
+If you're training on Google Colab (GPU runtime):
+
+1. Clone the repo
+
+```bash
+!git clone https://github.com/fractal2k/Handwriting-Synthesis.git
+%cd Handwriting-Synthesis/src
+```
+
+2. Install minimal deps (use Colab's preinstalled PyTorch/CUDA)
+
+```bash
+!pip install torchvision matplotlib tqdm tensorboard
+```
+
+3. Point to your dataset and (optionally) batch size via env vars
+
+```python
+import os
+os.environ["HW_BASE_DIR"] = "/content/Handwriting-Synthesis"
+os.environ["HW_DATA_DIR"] = "/content/IAM"  # change to your dataset path
+os.environ["HW_BATCH_SIZE"] = "32"          # adjust for VRAM
+```
+
+4. Train
+
+```bash
+!python train.py -l run1 -e 1
+```
+
+5. Inference (requires a trained checkpoint at src/out/checkpoint.pt)
+
+```bash
+!python inference.py -i hello
+```
+
+Notes:
+
+- Device selection now falls back in order: CUDA -> Apple MPS -> CPU.
+- Paths are auto-detected; you can override with the env vars below.
+
+### Environment variables
+
+- `HW_BASE_DIR`: Project root override (defaults to auto-detected repo root).
+- `HW_DATA_DIR`: Dataset directory for training (defaults to `<BASE_DIR>/IAM`).
+- `HW_BATCH_SIZE`: Overrides batch size (default 64). Lower this on smaller GPUs.
+
 ## Training
 
 The model has 4 components. The first three take up ~13GB of memory and the fourth one takes up ~24GB.

@@ -11,7 +11,17 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--inp", help="Inference input")
 args = parser.parse_args()
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# Device selection with fallback
+def select_device():
+    """Select device for inference. Falls back to single device."""
+    if torch.cuda.is_available():
+        return torch.device("cuda:0")
+    # Apple Silicon fallback
+    if hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+        return torch.device("mps")
+    return torch.device("cpu")
+
+device = select_device()
 
 
 def init_inference():
@@ -68,8 +78,8 @@ def inference_tb(inp, writer):
 
     test = preprocess_labels([inp] * config.BATCH_SIZE, encoding_dict)
     with torch.no_grad():
-        # lm.eval()
-        # gen.eval()
+        lm.eval()
+        gen.eval()
         zin = generate_noise(config.Z_LEN, config.BATCH_SIZE, device)
         gin = lm(test.to(device))
         gout = gen(zin, gin)
@@ -81,7 +91,7 @@ def inference_tb(inp, writer):
 
 def inference(inp, filename):
     lm, gen = init_inference()
-    checkpoint = torch.load(f"{config.OUT_DIR}/checkpoint.pt")
+    checkpoint = torch.load(f"{config.OUT_DIR}/checkpoint.pt", map_location=device)
 
     ctoi_file = open(f"{config.BASE_DIR}/src/ctoi.txt", "rb")
     encoding_dict = pickle.load(ctoi_file)
@@ -94,6 +104,8 @@ def inference(inp, filename):
 
     test = preprocess_labels([inp] * config.BATCH_SIZE, encoding_dict)
     with torch.no_grad():
+        lm.eval()
+        gen.eval()
         zin = generate_noise(config.Z_LEN, config.BATCH_SIZE, device)
         gin = lm(test.to(device))
         gout = gen(zin, gin)
