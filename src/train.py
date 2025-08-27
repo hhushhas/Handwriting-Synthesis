@@ -114,7 +114,7 @@ def train(epochs=1, from_checkpoint=False, checkpoint_interval=1):
     lm, gen, dis, rec = init_models()
     lm_opt, gen_opt, dis_opt, rec_opt = init_optim(lm, gen, dis, rec)
 
-    ctoi_file = open(f"{config.BASE_DIR}/src/ctoi.txt", "rb")
+    ctoi_file = open(f"{config.BASE_DIR}/ctoi.txt", "rb")
     encoding_dict = pickle.load(ctoi_file)
     ctoi_file.close()
 
