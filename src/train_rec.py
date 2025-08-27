@@ -47,7 +47,7 @@ def train(epochs, checkpoint_interval=1):
         rec.parameters(), lr=config.LEARNING_RATE, betas=config.BETAS
     )
 
-    ctoi_file = open(f"{config.BASE_DIR}/src/ctoi.txt", "rb")
+    ctoi_file = open(f"{config.BASE_DIR}/ctoi.txt", "rb")
     encoding_dict = pickle.load(ctoi_file)
     ctoi_file.close()
     # print(encoding_dict)

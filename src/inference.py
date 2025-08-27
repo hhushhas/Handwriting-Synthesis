@@ -68,7 +68,7 @@ def inference_tb(inp, writer):
         f"{config.OUT_DIR}/checkpoint.pt", map_location=device, weights_only=False
     )
 
-    ctoi_file = open(f"{config.BASE_DIR}/src/ctoi.txt", "rb")
+    ctoi_file = open(f"{config.BASE_DIR}/ctoi.txt", "rb")
     encoding_dict = pickle.load(ctoi_file)
     ctoi_file.close()
 
@@ -97,7 +97,7 @@ def inference(inp, filename):
         f"{config.OUT_DIR}/checkpoint.pt", map_location=device, weights_only=False
     )
 
-    ctoi_file = open(f"{config.BASE_DIR}/src/ctoi.txt", "rb")
+    ctoi_file = open(f"{config.BASE_DIR}/ctoi.txt", "rb")
     encoding_dict = pickle.load(ctoi_file)
     ctoi_file.close()
     # print(

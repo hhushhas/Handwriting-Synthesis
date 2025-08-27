@@ -12,8 +12,8 @@ with open(f"{BASE_DIR}/ctoi.txt", "rb") as file:
 SRC_DIR = os.getenv("HW_DATA_DIR") or f"{BASE_DIR}/IAM"
 
 # Output and log directories
-OUT_DIR = f"{BASE_DIR}/src/out"
-RUNS_DIR = f"{BASE_DIR}/src/runs"
+OUT_DIR = f"{BASE_DIR}/out"
+RUNS_DIR = f"{BASE_DIR}/runs"
 
 # Ensure directories exist
 os.makedirs(OUT_DIR, exist_ok=True)
