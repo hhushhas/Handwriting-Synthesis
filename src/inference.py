@@ -64,7 +64,9 @@ def init_old():
 
 def inference_tb(inp, writer):
     lm, gen = init_inference()
-    checkpoint = torch.load(f"{config.OUT_DIR}/checkpoint.pt")
+    checkpoint = torch.load(
+        f"{config.OUT_DIR}/checkpoint.pt", map_location=device, weights_only=False
+    )
 
     ctoi_file = open(f"{config.BASE_DIR}/src/ctoi.txt", "rb")
     encoding_dict = pickle.load(ctoi_file)
@@ -91,7 +93,9 @@ def inference_tb(inp, writer):
 
 def inference(inp, filename):
     lm, gen = init_inference()
-    checkpoint = torch.load(f"{config.OUT_DIR}/checkpoint.pt", map_location=device)
+    checkpoint = torch.load(
+        f"{config.OUT_DIR}/checkpoint.pt", map_location=device, weights_only=False
+    )
 
     ctoi_file = open(f"{config.BASE_DIR}/src/ctoi.txt", "rb")
     encoding_dict = pickle.load(ctoi_file)

@@ -5,7 +5,7 @@ from pathlib import Path
 
 # Auto-detect project base directory or allow override via env var
 BASE_DIR = os.getenv("HW_BASE_DIR") or str(Path(__file__).resolve().parent.parent)
-with open(f"{BASE_DIR}/ctoi.txt", "rb") as file:
+with open(f"{BASE_DIR}/src/ctoi.txt", "rb") as file:
     enc_dict = pickle.load(file)
 
 # Dataset directory (override with HW_DATA_DIR)
